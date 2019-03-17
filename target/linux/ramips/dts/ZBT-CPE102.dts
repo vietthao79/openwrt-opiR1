@@ -13,16 +13,10 @@
 		bootargs = "console=ttyS0,115200";
 	};
 
-
-	aliases {
-		led-boot = &led_4g_0;
-		led-failsafe = &led_4g_0;
-	};
-
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
-		led_4g_0: 4g-0 {
+		4g-0 {
 			label = "zbt-cpe102:green:4g-0";
 			gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
 		};
@@ -38,8 +32,10 @@
 		};
 	};
 
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <20>;
 
 		reset {
@@ -66,38 +62,33 @@
 	status = "okay";
 
 	en25q64@0 {
+		#address-cells = <1>;
+		#size-cells = <1>;
 		compatible = "jedec,spi-nor";
 		reg = <0>;
 		spi-max-frequency = <10000000>;
 
-		partitions {
-			compatible = "fixed-partitions";
-			#address-cells = <1>;
-			#size-cells = <1>;
+		partition@0 {
+			label = "u-boot";
+			reg = <0x0 0x30000>;
+			read-only;
+		};
 
-			partition@0 {
-				label = "u-boot";
-				reg = <0x0 0x30000>;
-				read-only;
-			};
+		partition@30000 {
+			label = "u-boot-env";
+			reg = <0x30000 0x10000>;
+			read-only;
+		};
 
-			partition@30000 {
-				label = "u-boot-env";
-				reg = <0x30000 0x10000>;
-				read-only;
-			};
+		factory: partition@40000 {
+			label = "factory";
+			reg = <0x40000 0x10000>;
+			read-only;
+		};
 
-			factory: partition@40000 {
-				label = "factory";
-				reg = <0x40000 0x10000>;
-				read-only;
-			};
-
-			partition@50000 {
-				compatible = "denx,uimage";
-				label = "firmware";
-				reg = <0x50000 0x760000>;
-			};
+		partition@50000 {
+			label = "firmware";
+			reg = <0x50000 0x760000>;
 		};
 	};
 };

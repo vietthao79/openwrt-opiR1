@@ -1,7 +1,5 @@
-Index: EasyRSA-3.0.4/easyrsa
-===================================================================
---- EasyRSA-3.0.4.orig/easyrsa
-+++ EasyRSA-3.0.4/easyrsa
+--- a/easyrsa
++++ b/easyrsa
 @@ -1033,7 +1033,7 @@ vars_setup() {
  	vars=
  

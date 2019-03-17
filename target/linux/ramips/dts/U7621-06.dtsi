@@ -40,13 +40,6 @@
 / {
 	compatible = "unielec,u7621-06", "mediatek,mt7621-soc";
 
-	aliases {
-		led-boot = &led_status;
-		led-failsafe = &led_status;
-		led-running = &led_status;
-		led-upgrade = &led_status;
-	};
-
 	chosen {
 		bootargs = "console=ttyS0,115200";
 	};
@@ -62,8 +55,10 @@
 		};
 	};
 
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <20>;
 
 		reset {
@@ -73,10 +68,10 @@
 		};
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
-		led_status: status {
+		status {
 			label = "u7621-06:green:status";
 			gpios = <&gpio0 10 GPIO_ACTIVE_LOW>;
 		};
@@ -99,6 +94,8 @@
 
 &sdhci {
 	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&sdhci_pins>;
 };
 
 &pcie {

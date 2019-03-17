@@ -36,7 +36,7 @@ define Package/libubus
   SECTION:=libs
   CATEGORY:=Libraries
   DEPENDS:=+libubox
-  ABI_VERSION:=20170705
+  ABI_VERSION:=$(PKG_VERSION)
   TITLE:=OpenWrt RPC client library
 endef
 
@@ -47,8 +47,7 @@ define Package/libubus-lua
   TITLE:=Lua binding for the OpenWrt RPC client
 endef
 
-TARGET_CFLAGS += -I$(STAGING_DIR)/usr/include -flto
-TARGET_LDFLAGS += -flto
+TARGET_CFLAGS += -I$(STAGING_DIR)/usr/include
 
 CMAKE_OPTIONS = \
 	-DLUAPATH=/usr/lib/lua

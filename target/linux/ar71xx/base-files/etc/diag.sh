@@ -30,7 +30,6 @@ get_status_led() {
 	e750g-v8|\
 	eap120|\
 	minibox-v1|\
-	minibox-v3.2|\
 	packet-squirrel|\
 	som9331|\
 	sr3200|\
@@ -67,7 +66,6 @@ get_status_led() {
 	archer-c25-v1|\
 	archer-c58-v1|\
 	archer-c59-v1|\
-	archer-c59-v2|\
 	archer-c60-v1|\
 	archer-c60-v2|\
 	archer-c7-v4|\
@@ -373,7 +371,6 @@ get_status_led() {
 	rb-911g-2hpnd|\
 	rb-911g-5hpacd|\
 	rb-911g-5hpnd|\
-	rb-931-2nd|\
 	rb-941-2nd|\
 	rb-951ui-2nd|\
 	rb-952ui-5ac2nd|\
@@ -381,8 +378,7 @@ get_status_led() {
 	rb-lhg-5nd|\
 	rb-map-2nd|\
 	rb-mapl-2nd|\
-	rb-wap-2nd|\
-	rb-wapr-2nd)
+	rb-wap-2nd)
 		status_led="rb:green:user"
 		;;
 	rb-951ui-2hnd)

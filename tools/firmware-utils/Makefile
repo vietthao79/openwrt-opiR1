@@ -70,8 +70,8 @@ define Host/Compile
 	$(call cc,fix-u-media-header cyg_crc32,-Wall)
 	$(call cc,hcsmakeimage bcmalgo)
 	$(call cc,mkporayfw, -Wall)
-	$(call cc,mkrasimage, --std=gnu99)
 	$(call cc,mkhilinkfw, -lcrypto)
+	$(call cc,mkdcs932, -Wall)
 	$(call cc,mkheader_gemtek,-lz)
 	$(call cc,mkrtn56uimg, -lz)
 	$(call cc,dgn3500sum, -Wall)
@@ -82,9 +82,8 @@ define Host/Compile
 	$(call cc,mkbuffaloimg, -Wall)
 	$(call cc,zyimage, -Wall)
 	$(call cc,mkdhpimg buffalo-lib, -Wall)
-	$(call cc,mkdlinkfw mkdlinkfw-lib, -lz -Wall --std=c99)
+	$(call cc,mkdlinkfw mkdlinkfw-lib, -lz -Wall --std=gnu99)
 	$(call cc,dns313-header, -Wall)
-	$(call cc,mksercommfw, -Wall)
 endef
 
 define Host/Install

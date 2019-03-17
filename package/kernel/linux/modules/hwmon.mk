@@ -29,20 +29,6 @@ define AddDepends/hwmon
   DEPENDS:=kmod-hwmon-core $(1)
 endef
 
-define KernelPackage/hwmon-ads1015
-  TITLE:=Texas Instruments ADS1015
-  KCONFIG:= CONFIG_SENSORS_ADS1015
-  FILES:= $(LINUX_DIR)/drivers/hwmon/ads1015.ko
-  AUTOLOAD:=$(call AutoLoad,60,ads1015)
-  $(call AddDepends/hwmon,+kmod-i2c-core)
-endef
-
-define KernelPackage/hwmon-ads1015/description
- Kernel module for Texas Instruments ADS1015 Analog-to-Digital converter
-endef
-
-$(eval $(call KernelPackage,hwmon-ads1015))
-
 define KernelPackage/hwmon-adt7410
   TITLE:=ADT7410 monitoring support
   KCONFIG:= \
@@ -112,7 +98,7 @@ define KernelPackage/hwmon-ina2xx
   KCONFIG:=CONFIG_SENSORS_INA2XX
   FILES:=$(LINUX_DIR)/drivers/hwmon/ina2xx.ko
   AUTOLOAD:=$(call AutoProbe,ina2xx)
-  $(call AddDepends/hwmon,+kmod-i2c-core +!LINUX_3_18:kmod-regmap-i2c)
+  $(call AddDepends/hwmon,+kmod-i2c-core +!LINUX_3_18:kmod-regmap)
 endef
 
 define KernelPackage/hwmon-ina2xx/description
@@ -142,7 +128,7 @@ define KernelPackage/hwmon-lm63
   KCONFIG:=CONFIG_SENSORS_LM63
   FILES:=$(LINUX_DIR)/drivers/hwmon/lm63.ko
   AUTOLOAD:=$(call AutoProbe,lm63)
-  $(call AddDepends/hwmon,+kmod-i2c-core +kmod-regmap-i2c)
+  $(call AddDepends/hwmon,+kmod-i2c-core +kmod-regmap)
 endef
 
 define KernelPackage/hwmon-lm63/description
@@ -157,7 +143,7 @@ define KernelPackage/hwmon-lm75
   KCONFIG:=CONFIG_SENSORS_LM75
   FILES:=$(LINUX_DIR)/drivers/hwmon/lm75.ko
   AUTOLOAD:=$(call AutoProbe,lm75)
-  $(call AddDepends/hwmon,+kmod-i2c-core +PACKAGE_kmod-thermal:kmod-thermal +kmod-regmap-i2c)
+  $(call AddDepends/hwmon,+kmod-i2c-core +PACKAGE_kmod-thermal:kmod-thermal +kmod-regmap)
 endef
 
 define KernelPackage/hwmon-lm75/description
@@ -287,36 +273,6 @@ endef
 $(eval $(call KernelPackage,hwmon-pc87360))
 
 
-define KernelPackage/pmbus-core
-  TITLE:=PMBus support
-  KCONFIG:= CONFIG_PMBUS
-  FILES:=$(LINUX_DIR)/drivers/hwmon/pmbus/pmbus_core.ko
-  $(call AddDepends/hwmon,+kmod-i2c-core)
-endef
-
-define KernelPackage/pmbus-core/description
- Kernel modules for Power Management Bus
-endef
-
-$(eval $(call KernelPackage,pmbus-core))
-
-
-define KernelPackage/pmbus-zl6100
-  TITLE:=Intersil / Zilker Labs ZL6100 hardware monitoring
-  KCONFIG:=CONFIG_SENSORS_ZL6100
-  FILES:=$(LINUX_DIR)/drivers/hwmon/pmbus/zl6100.ko
-  AUTOLOAD:=$(call AutoProbe,zl6100)
-  $(call AddDepends/hwmon, +kmod-pmbus-core)
-endef
-
-define KernelPackage/hwmon-sht21/description
- Kernel module for Intersil / Zilker Labs ZL6100 and
-compatible digital DC-DC controllers
-endef
-
-$(eval $(call KernelPackage,pmbus-zl6100))
-
-
 define KernelPackage/hwmon-pwmfan
   TITLE:=Generic PWM FAN support
   KCONFIG:=CONFIG_SENSORS_PWM_FAN
@@ -369,7 +325,7 @@ define KernelPackage/hwmon-tmp102
   KCONFIG:=CONFIG_SENSORS_TMP102
   FILES:=$(LINUX_DIR)/drivers/hwmon/tmp102.ko
   AUTOLOAD:=$(call AutoProbe,tmp102)
-  $(call AddDepends/hwmon,+kmod-i2c-core +PACKAGE_kmod-thermal:kmod-thermal +kmod-regmap-i2c)
+  $(call AddDepends/hwmon,+kmod-i2c-core +PACKAGE_kmod-thermal:kmod-thermal +kmod-regmap)
 endef
 
 define KernelPackage/hwmon-tmp102/description
@@ -384,7 +340,7 @@ define KernelPackage/hwmon-tmp103
   KCONFIG:=CONFIG_SENSORS_TMP103
   FILES:=$(LINUX_DIR)/drivers/hwmon/tmp103.ko
   AUTOLOAD:=$(call AutoProbe,tmp103)
-  $(call AddDepends/hwmon,+kmod-i2c-core +kmod-regmap-i2c)
+  $(call AddDepends/hwmon,+kmod-i2c-core +kmod-regmap)
 endef
 
 define KernelPackage/hwmon-tmp103/description
@@ -469,27 +425,5 @@ define KernelPackage/hwmon-w83793/description
 endef
 
 $(eval $(call KernelPackage,hwmon-w83793))
-
-
-define KernelPackage/hwmon-adcxx
-  TITLE:=ADCxx monitoring support
-  KCONFIG:=CONFIG_SENSORS_ADCXX
-  FILES:=$(LINUX_DIR)/drivers/hwmon/adcxx.ko
-  AUTOLOAD:=$(call AutoLoad,60,adcxx)
-  $(call AddDepends/hwmon,)
-endef
-
-define KernelPackage/hwmon-adcxx/description
-  Kernel module for the National Semiconductor
-  ADC<bb><c>S<sss> chip family, where
-  * bb  is the resolution in number of bits (8, 10, 12)
-  * c   is the number of channels (1, 2, 4, 8)
-  * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500
-    kSPS and 101 for 1 MSPS)
-
-  Examples : ADC081S101, ADC124S501, ...
-endef
-
-$(eval $(call KernelPackage,hwmon-adcxx))
 
 

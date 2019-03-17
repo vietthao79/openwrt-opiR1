@@ -6,15 +6,10 @@
 / {
 	compatible = "alphanetworks,asl26555", "ralink,rt3050-soc";
 
-	aliases {
-		led-boot = &led_power_green;
-		led-failsafe = &led_power_green;
-		led-running = &led_power_green;
-		led-upgrade = &led_power_green;
-	};
-
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <20>;
 
 		reset {
@@ -30,7 +25,7 @@
 		};
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
 		eth {
@@ -53,7 +48,7 @@
 			gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
 		};
 
-		led_power_green: power-green {
+		power-green {
 			label = "asl26555:green:power";
 			gpios = <&gpio0 8 GPIO_ACTIVE_HIGH>;
 		};
@@ -66,8 +61,6 @@
 		3g-green {
 			label = "asl26555:green:3g";
 			gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
-			trigger-sources = <&otg_port1>;
-			linux,default-trigger = "usbport";
 		};
 
 		3g-red {

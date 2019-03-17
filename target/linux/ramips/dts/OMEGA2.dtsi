@@ -6,18 +6,11 @@
 / {
 	compatible = "onion,omega2", "mediatek,mt7628an-soc";
 
-	aliases {
-		led-boot = &system_led;
-		led-failsafe = &system_led;
-		led-running = &system_led;
-		led-upgrade = &system_led;
-	};
-
 	chosen {
 		bootargs = "console=ttyS0,115200";
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
 		system_led: system {
@@ -25,8 +18,10 @@
 		};
 	};
 
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <20>;
 
 		reset {
@@ -106,37 +101,33 @@
 	pinctrl-0 = <&spi_pins>, <&spi_cs1_pins>;
 
 	m25p80@0 {
+		#address-cells = <1>;
+		#size-cells = <1>;
 		compatible = "jedec,spi-nor";
 		reg = <0>;
 		spi-max-frequency = <40000000>;
+		m25p,chunked-io = <31>;
 
-		partitions {
-			compatible = "fixed-partitions";
-			#address-cells = <1>;
-			#size-cells = <1>;
+		partition@0 {
+			label = "u-boot";
+			reg = <0x0 0x30000>;
+			read-only;
+		};
 
-			partition@0 {
-				label = "u-boot";
-				reg = <0x0 0x30000>;
-				read-only;
-			};
+		partition@30000 {
+			label = "u-boot-env";
+			reg = <0x30000 0x10000>;
+			read-only;
+		};
 
-			partition@30000 {
-				label = "u-boot-env";
-				reg = <0x30000 0x10000>;
-				read-only;
-			};
+		factory: partition@40000 {
+			label = "factory";
+			reg = <0x40000 0x10000>;
+			read-only;
+		};
 
-			factory: partition@40000 {
-				label = "factory";
-				reg = <0x40000 0x10000>;
-				read-only;
-			};
-
-			firmware: partition@50000 {
-				compatible = "denx,uimage";
-				label = "firmware";
-			};
+		firmware: partition@50000 {
+			label = "firmware";
 		};
 	};
 

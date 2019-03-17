@@ -18,16 +18,12 @@
 	chosen {
 		bootargs = "console=ttyS0,115200";
 /*
-		stdout-path = "/soc@ffe00000/serial@4500";
+		linux,stdout-path = "/soc@ffe00000/serial@4500";
 */
 	};
 
 	aliases {
 		spi0 = &spi0;
-		led-boot = &system_green;
-		led-failsafe = &system_green;
-		led-running = &system_green;
-		led-upgrade = &system_green;
 	};
 
 	memory {
@@ -39,44 +35,49 @@
 
 		spi0: spi@7000 {
 			flash@0 {
+				#address-cells = <1>;
+				#size-cells = <1>;
 				compatible = "jedec,spi-nor";
 				reg = <0>;
 				spi-max-frequency = <25000000>;
 
-				partitions {
-					compatible = "fixed-partitions";
-					#address-cells = <1>;
-					#size-cells = <1>;
+				u-boot@0 {
+					reg = <0x0 0x0050000>;
+					label = "u-boot";
+					read-only;
+				};
 
-					partition@0 {
-						reg = <0x0 0x0050000>;
-						label = "u-boot";
-						read-only;
-					};
+				dtb@50000 {
+					reg = <0x00050000 0x00010000>;
+					label = "dtb";
+					read-only;
+				};
 
-					partition@50000 {
-						reg = <0x00050000 0x00010000>;
-						label = "dtb";
-						read-only;
-					};
+				kernel@60000 {
+					reg = <0x00060000 0x002a0000>;
+					label = "kernel";
+				};
 
-					partition@60000 {
-						compatible = "tplink,firmware";
-						reg = <0x00060000 0x00f80000>;
-						label = "firmware";
-					};
+				rootfs@300000 {
+					reg = <0x00300000 0x00ce0000>;
+					label = "rootfs";
+				};
 
-					config: partition@fe0000 {
-						reg = <0x00fe0000 0x00010000>;
-						label = "config";
-						read-only;
-					};
+				config: config@fe0000 {
+					reg = <0x00fe0000 0x00010000>;
+					label = "config";
+					read-only;
+				};
 
-					partition@ff0000 {
-						reg = <0x00ff0000 0x00010000>;
-						label = "caldata";
-						read-only;
-					};
+				caldata@ff0000 {
+					reg = <0x00ff0000 0x00010000>;
+					label = "caldata";
+					read-only;
+				};
+
+				firmware@60000 {
+					reg = <0x00060000 0x00f80000>;
+					label = "firmware";
 				};
 			};
 		};
@@ -196,7 +197,7 @@
 	leds {
 		compatible = "gpio-leds";
 
-		system_green: system {
+		system {
 			gpios = <&gpio0 2 1>; /* active low */
 			label = "tp-link:blue:system";
 		};

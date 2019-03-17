@@ -6,8 +6,8 @@
 . /lib/ar71xx.sh
 
 PART_NAME=firmware
-RAMFS_COPY_DATA='/lib/ar71xx.sh /etc/fw_env.config /var/lock/fw_printenv.lock'
-RAMFS_COPY_BIN='nandwrite fw_printenv fw_setenv'
+RAMFS_COPY_DATA=/lib/ar71xx.sh
+RAMFS_COPY_BIN='nandwrite'
 
 CI_BLKSZ=65536
 CI_LDADR=0x80060000
@@ -212,7 +212,6 @@ platform_check_image() {
 	archer-c25-v1|\
 	archer-c58-v1|\
 	archer-c59-v1|\
-	archer-c59-v2|\
 	archer-c60-v1|\
 	archer-c60-v2|\
 	archer-c7-v4|\
@@ -268,7 +267,6 @@ platform_check_image() {
 	gl-ar300m|\
 	gl-ar300|\
 	gl-ar750|\
-	gl-ar750s|\
 	gl-domino|\
 	gl-mifi|\
 	gl-usb150|\
@@ -415,7 +413,6 @@ platform_check_image() {
 	lan-turtle|\
 	mc-mac1200r|\
 	minibox-v1|\
-	minibox-v3.2|\
 	omy-g1|\
 	omy-x1|\
 	onion-omega|\
@@ -583,6 +580,7 @@ platform_check_image() {
 		return $?
 		;;
 	cpe210|\
+	cpe510|\
 	eap120|\
 	wbs210|\
 	wbs510)
@@ -592,20 +590,6 @@ platform_check_image() {
 	cpe210-v2)
 		tplink_pharos_check_image "$1" "01000000" "$(tplink_pharos_v2_get_model_string)" '\0\xff\r' && return 0
 		return 1
-		;;
-	cpe510)
-		local modelstr="$(tplink_pharos_v2_get_model_string)"
-		tplink_pharos_board_detect $modelstr
-		case $AR71XX_MODEL in
-		'TP-Link CPE510 v2.0')
-			tplink_pharos_check_image "$1" "7f454c46" "$modelstr" '\0\xff\r' && return 0
-			return 1
-			;;
-		*)
-			tplink_pharos_check_image "$1" "7f454c46" "$(tplink_pharos_get_model_string)" '' && return 0
-			return 1
-			;;
-		esac
 		;;
 	a40|\
 	a60|\
@@ -722,7 +706,6 @@ platform_check_image() {
 	rb-750up-r2|\
 	rb-911-2hn|\
 	rb-911-5hn|\
-	rb-931-2nd|\
 	rb-941-2nd|\
 	rb-951ui-2nd|\
 	rb-952ui-5ac2nd|\
@@ -731,8 +714,7 @@ platform_check_image() {
 	rb-map-2nd|\
 	rb-mapl-2nd|\
 	rb-wap-2nd|\
-	rb-wapg-5hact2hnd|\
-	rb-wapr-2nd)
+	rb-wapg-5hact2hnd)
 		return 0
 		;;
 	esac
@@ -750,7 +732,6 @@ platform_pre_upgrade() {
 	rb-750up-r2|\
 	rb-911-2hn|\
 	rb-911-5hn|\
-	rb-931-2nd|\
 	rb-941-2nd|\
 	rb-951ui-2nd|\
 	rb-952ui-5ac2nd|\
@@ -759,8 +740,7 @@ platform_pre_upgrade() {
 	rb-map-2nd|\
 	rb-mapl-2nd|\
 	rb-wap-2nd|\
-	rb-wapg-5hact2hnd|\
-	rb-wapr-2nd)
+	rb-wapg-5hact2hnd)
 		# erase firmware if booted from initramfs
 		[ -z "$(rootfs_type)" ] && mtd erase firmware
 		;;

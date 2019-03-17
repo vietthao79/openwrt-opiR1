@@ -14,7 +14,6 @@
 		led-boot = &power;
 		led-failsafe = &power;
 		led-running = &power;
-		led-upgrade = &power;
 
 		led-usb = &led_usb1;
 		led-usb2 = &led_usb2;
@@ -305,9 +304,9 @@
 
 &usb_phy0 {
 	status = "okay";
+	phy-supply = <&usb_vbus>;
 };
 
 &usb0 {
 	status = "okay";
-	vbus-supply = <&usb_vbus>;
 };

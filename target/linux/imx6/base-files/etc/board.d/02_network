@@ -10,7 +10,6 @@ board=$(board_name)
 board_config_update
 
 case "$board" in
-cubox-i |\
 *gw51xx |\
 *gw52xx |\
 *gw5904)

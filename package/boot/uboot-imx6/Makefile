@@ -7,10 +7,10 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_VERSION:=2019.01
+PKG_VERSION:=2014.04
 PKG_RELEASE:=1
 
-PKG_HASH:=50bd7e5a466ab828914d080d5f6a432345b500e8fba1ad3b7b61e95e60d51c22
+PKG_HASH:=7b6444bd23eb61068c43bd1d44ec7e7bfdbce5cadeca20c833eee186b4d3fd31
 
 include $(INCLUDE_DIR)/u-boot.mk
 include $(INCLUDE_DIR)/package.mk
@@ -20,15 +20,7 @@ define U-Boot/Default
   UBOOT_IMAGE:=u-boot.imx
 endef
 
-define U-Boot/mx6cuboxi
-   NAME:=SolidRun Cubox-i boards
-   UBOOT_IMAGE:=SPL u-boot.img
-   UBOOT_MAKE_FLAGS:=SPL u-boot.img
-   BUILD_DEVICES:=cubox-i
-   HIDDEN:=1
-endef
-
-define U-Boot/mx6sabresd
+define U-Boot/mx6qsabresd
   NAME:=SABRE i.MX6Quad board
 endef
 
@@ -56,29 +48,31 @@ define U-Boot/nitrogen6s1g
   NAME:=Nitrogen6x i.MX6Solo 1GB board
 endef
 
-define U-Boot/wandboard
-  NAME:=Wandboard Dual Lite/Quad/Solo
+define U-Boot/wandboard_dl
+  NAME:=Wandboard Dual Lite
+  BUILD_DEVICES:=wandboard
+endef
+
+define U-Boot/wandboard_quad
+  NAME:=Wandboard Quad
+  BUILD_DEVICES:=wandboard
+endef
+
+define U-Boot/wandboard_solo
+  NAME:=Wandboard Solo
   BUILD_DEVICES:=wandboard
 endef
 
 UBOOT_TARGETS := \
-	mx6cuboxi \
-	mx6sabresd \
+	mx6qsabresd \
 	nitrogen6dl \
 	nitrogen6dl2g \
 	nitrogen6q \
 	nitrogen6q2g \
 	nitrogen6s \
 	nitrogen6s1g \
-	wandboard
-
-UBOOT_MAKE_FLAGS += u-boot.imx
-
-define Build/InstallDev
-	$(INSTALL_DIR) $(STAGING_DIR_IMAGE)
-	$(foreach img,$(UBOOT_IMAGE), \
-		$(CP) $(PKG_BUILD_DIR)/$(img) $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-$(img); \
-	)
-endef
+	wandboard_dl \
+	wandboard_quad \
+	wandboard_solo
 
 $(eval $(call BuildPackage/U-Boot))

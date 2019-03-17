@@ -73,9 +73,8 @@ include $(INCLUDE_DIR)/target.mk
 
 USER_PROFILE ?= $(firstword $(PROFILE_NAMES))
 PROFILE_LIST = $(foreach p,$(PROFILE_NAMES), \
-	echo '$(patsubst DEVICE_%,%,$(p)):'; $(if $($(p)_NAME),echo '    $(subst ','"'"',$($(p)_NAME))'; ) \
-	echo '    Packages: $($(p)_PACKAGES)'; echo '    hasImageMetadata: $($(p)_HAS_IMAGE_METADATA)'; \
-	[ "$($(p)_SUPPORTED_DEVICES)" ] && echo '    SupportedDevices: $($(p)_SUPPORTED_DEVICES)'; )
+	echo '$(patsubst DEVICE_%,%,$(p)):'; $(if $($(p)_NAME),echo '    $(subst ','"'"',$($(p)_NAME))'; ) echo '    Packages: $($(p)_PACKAGES)'; \
+)
 
 .profiles.mk: .targetinfo
 	@$(SCRIPT_DIR)/target-metadata.pl profile_mk $< '$(BOARD)$(if $(SUBTARGET),/$(SUBTARGET))' > $@
@@ -95,8 +94,7 @@ staging_dir/host/.prereq-build: include/prereq-build.mk
 	touch $@
 
 _call_info: FORCE
-	echo 'Current Target: "$(TARGETID)"'
-	echo 'Current Revision: "$(REVISION)"'
+	echo 'Current Target: "$(BOARD)$(if $(SUBTARGET), ($(BOARDNAME)))"'
 	echo 'Default Packages: $(DEFAULT_PACKAGES)'
 	echo 'Available Profiles:'
 	echo; $(PROFILE_LIST)

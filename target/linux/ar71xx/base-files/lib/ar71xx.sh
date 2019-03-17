@@ -16,7 +16,7 @@ ar71xx_get_mtd_offset_size_format() {
 	dev=$(find_mtd_part $mtd)
 	[ -z "$dev" ] && return
 
-	dd if=$dev iflag=skip_bytes bs=$size skip=$offset count=1 2>/dev/null | hexdump -v -e "1/1 \"$format\""
+	dd if=$dev bs=1 skip=$offset count=$size 2>/dev/null | hexdump -v -e "1/1 \"$format\""
 }
 
 ar71xx_get_mtd_part_magic() {
@@ -390,7 +390,7 @@ tplink_pharos_v2_get_model_string() {
 	part=$(find_mtd_part 'product-info')
 	[ -z "$part" ] && return 1
 
-	dd if=$part iflag=skip_bytes bs=64 skip=4360 count=1 2>/dev/null | tr -d '\r\0' | head -n 1
+	dd if=$part bs=1 skip=4360 count=64 2>/dev/null | tr -d '\r\0' | head -n 1
 }
 
 ar71xx_board_detect() {
@@ -498,9 +498,6 @@ ar71xx_board_detect() {
 		;;
 	*"Archer C59 v1")
 		name="archer-c59-v1"
-        ;;
-	*"Archer C59 v2")
-		name="archer-c59-v2"
 		;;
 	*"Archer C60 v1")
 		name="archer-c60-v1"
@@ -591,14 +588,7 @@ ar71xx_board_detect() {
 		;;
 	*"CPE510/520")
 		name="cpe510"
-		tplink_pharos_board_detect "$(tplink_pharos_v2_get_model_string)"
-		case $AR71XX_MODEL in
-		'TP-Link CPE510 v2.0')
-			;;
-		*)
-			tplink_pharos_board_detect "$(tplink_pharos_get_model_string | tr -d '\r')"
-			;;
-		esac
+		tplink_pharos_board_detect "$(tplink_pharos_get_model_string | tr -d '\r')"
 		;;
 	*"CPE830")
 		name="cpe830"
@@ -770,9 +760,6 @@ ar71xx_board_detect() {
 	*"GL-AR750")
 		name="gl-ar750"
 		;;
-	*"GL-AR750S")
-		name="gl-ar750s"
-		;;
 	*"GL-CONNECT INET v1")
 		name="gl-inet"
 
@@ -834,9 +821,6 @@ ar71xx_board_detect() {
 		;;
 	*"MiniBox V1.0")
 		name="minibox-v1"
-		;;
-	*"Minibox V3.2")
-		name="minibox-v3.2"
 		;;
 	*"MR12")
 		name="mr12"
@@ -1089,10 +1073,7 @@ ar71xx_board_detect() {
 	*"RouterBOARD 921GS-5HPacD r2")
 		name="rb-921gs-5hpacd-r2"
 		;;
-	*"RouterBOARD 931-2nD")
-		name="rb-931-2nd"
-		;;
-	*"RouterBOARD"*"941-2nD")
+	*"RouterBOARD 941-2nD")
 		name="rb-941-2nd"
 		;;
 	*"RouterBOARD 951G-2HnD")
@@ -1127,9 +1108,6 @@ ar71xx_board_detect() {
 		;;
 	*"RouterBOARD wAP 2nD r2")
 		name="rb-wap-2nd"
-		;;
-	*"RouterBOARD wAP R-2nD")
-		name="rb-wapr-2nd"
 		;;
 	*"RouterBOARD wAP G-5HacT2HnD")
 		name="rb-wapg-5hact2hnd"

@@ -4,12 +4,8 @@
 	compatible = "mediatek,mt7628an-soc";
 
 	cpus {
-		#address-cells = <1>;
-		#size-cells = <0>;
-
 		cpu@0 {
 			compatible = "mips,mips24KEc";
-			reg = <0>;
 		};
 	};
 
@@ -21,7 +17,7 @@
 		serial0 = &uartlite;
 	};
 
-	cpuintc: cpuintc {
+	cpuintc: cpuintc@0 {
 		#address-cells = <0>;
 		#interrupt-cells = <1>;
 		interrupt-controller;
@@ -281,8 +277,8 @@
 		state_default: pinctrl0 {
 		};
 
-		spi_pins: spi_pins {
-			spi_pins {
+		spi_pins: spi {
+			spi {
 				ralink,group = "spi";
 				ralink,function = "spi";
 			};
@@ -295,8 +291,8 @@
 			};
 		};
 
-		i2c_pins: i2c_pins {
-			i2c_pins {
+		i2c_pins: i2c {
+			i2c {
 				ralink,group = "i2c";
 				ralink,function = "i2c";
 			};
@@ -402,8 +398,6 @@
 	};
 
 	ehci: ehci@101c0000 {
-		#address-cells = <1>;
-		#size-cells = <0>;
 		compatible = "generic-ehci";
 		reg = <0x101c0000 0x1000>;
 
@@ -412,16 +406,9 @@
 
 		interrupt-parent = <&intc>;
 		interrupts = <18>;
-
-		ehci_port1: port@1 {
-			reg = <1>;
-			#trigger-source-cells = <0>;
-		};
 	};
 
 	ohci: ohci@101c1000 {
-		#address-cells = <1>;
-		#size-cells = <0>;
 		compatible = "generic-ohci";
 		reg = <0x101c1000 0x1000>;
 
@@ -430,11 +417,6 @@
 
 		interrupt-parent = <&intc>;
 		interrupts = <18>;
-
-		ohci_port1: port@1 {
-			reg = <1>;
-			#trigger-source-cells = <0>;
-		};
 	};
 
 	ethernet: ethernet@10100000 {
@@ -487,15 +469,13 @@
 			0x01000000 0 0x00000000 0x10160000 0 0x00010000 /* io space */
 		>;
 
-		pcie0: pcie@0,0 {
+		pcie-bridge {
 			reg = <0x0000 0 0 0 0>;
 
 			#address-cells = <3>;
 			#size-cells = <2>;
 
 			device_type = "pci";
-
-			ranges;
 		};
 	};
 

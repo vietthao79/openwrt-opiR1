@@ -16,7 +16,6 @@
 		led-boot = &power_green;
 		led-failsafe = &power_red;
 		led-running = &power_green;
-		led-upgrade = &power_green;
 
 		led-dsl = &power_green;
 		led-internet = &online;

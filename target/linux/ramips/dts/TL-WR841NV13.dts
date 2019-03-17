@@ -9,15 +9,10 @@
 	compatible = "tplink,tl-wr841n-v13", "mediatek,mt7628an-soc";
 	model = "TP-Link TL-WR841N v13";
 
-	aliases {
-		led-boot = &led_power;
-		led-failsafe = &led_power;
-		led-running = &led_power;
-		led-upgrade = &led_power;
-	};
-
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <20>;
 
 		reset {
@@ -33,10 +28,10 @@
 		};
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
-		led_power: power {
+		power {
 			label = "tl-wr841n-v13:green:power";
 			gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
 		};

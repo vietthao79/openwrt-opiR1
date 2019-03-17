@@ -6,24 +6,19 @@
 / {
 	compatible = "poray,m4", "ralink,rt5350-soc";
 
-	aliases {
-		led-boot = &led_status;
-		led-failsafe = &led_status;
-		led-running = &led_status;
-		led-upgrade = &led_status;
-	};
-
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
-		led_status: status {
+		status {
 			label = "m4:blue:status";
 			gpios = <&gpio0 9 GPIO_ACTIVE_LOW>;
 		};
 	};
 
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <20>;
 
 		reset {

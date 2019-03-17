@@ -27,8 +27,9 @@
 	};
 
 	chosen {
-		stdout-path = "/plb/opb/serial@ef600400";
+		linux,stdout-path = "/plb/opb/serial@ef600400";
 	};
+
 };
 
 &CRYPTO {
@@ -53,6 +54,9 @@
 	ndfc@1,0 {
 		status = "okay";
 		nand {
+			#address-cells = <1>;
+			#size-cells = <1>;
+
 			partition@0 {
 				label = "u-boot";
 				reg = <0x00000000 0x00100000>;
@@ -73,6 +77,11 @@
 			partition@240000 {
 				label = "ubi";
 				reg = <0x00240000 0x3fdc0000>;
+			};
+
+			all {
+				label = "all";
+				reg = <0x00000000 0x40000000>;
 			};
 		};
 	};
@@ -112,7 +121,7 @@
 };
 
 &POB0 {
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
 		status: power-green {
@@ -156,12 +165,14 @@
 		};
 	};
 
-	keys {
+	gpio_keys_polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <60>;	/* 3 * 20 = 60ms */
 		autorepeat;
 
-		reset {
+		button@1 {
 			label = "Reset button";
 			linux,code = <KEY_RESTART>;
 			gpios = <&GPIO0 16 GPIO_ACTIVE_LOW>;

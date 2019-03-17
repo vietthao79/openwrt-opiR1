@@ -9,15 +9,10 @@
 	compatible = "dlink,dwr-512-b", "ralink,rt5350-soc";
 	model = "D-Link DWR-512 B";
 
-	aliases {
-		led-boot = &led_status;
-		led-failsafe = &led_status;
-		led-running = &led_status;
-		led-upgrade = &led_status;
-	};
-
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <20>;
 
 		wps {
@@ -33,14 +28,14 @@
 		};
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
 		sms {
 			label = "dwr-512-b:green:sms";
 			gpios = <&gpio0 8 GPIO_ACTIVE_HIGH>;
 		};
-		led_status: status {
+		status {
 			label = "dwr-512-b:green:status";
 			gpios = <&gpio0 9 GPIO_ACTIVE_LOW>;
 		};
@@ -81,33 +76,28 @@
 &spi0 {
 	status = "okay";
 
-	flash@0 {
+	mx25l6405d@0 {
+		#address-cells = <1>;
+		#size-cells = <1>;
 		compatible = "jedec,spi-nor";
 		reg = <0>;
 		spi-max-frequency = <30000000>;
 		m25p,fast-read;
 
-		partitions {
-			compatible = "fixed-partitions";
-			#address-cells = <1>;
-			#size-cells = <1>;
+		partition@0 {
+			label = "jboot";
+			reg = <0x0 0x10000>;
+			read-only;
+		};
 
-			partition@0 {
-				label = "jboot";
-				reg = <0x0 0x10000>;
-				read-only;
-			};
+		partition@10000 {
+			label = "firmware";
+			reg = <0x10000 0x7e0000>;
+		};
 
-			partition@10000 {
-				compatible = "amit,jimage";
-				label = "firmware";
-				reg = <0x10000 0x7e0000>;
-			};
-
-			config: partition@7f0000 {
-				label = "config";
-				reg = <0x7f0000 0x10000>;
-			};
+		config: partition@7f0000 {
+			label = "config";
+			reg = <0x7f0000 0x10000>;
 		};
 	};
 };
@@ -115,7 +105,7 @@
 &spi1 {
 	status = "okay";
 
-	spidev@0 {
+	spidev@1 {
 		#address-cells = <1>;
 		#size-cells = <1>;
 		compatible = "siliconlabs,si3210";

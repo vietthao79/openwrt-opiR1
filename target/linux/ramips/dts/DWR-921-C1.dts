@@ -9,13 +9,10 @@
 	compatible = "dlink,dwr-921-c1", "ralink,mt7620n-soc";
 	model = "D-Link DWR-921 C1";
 
-	aliases {
-		led-boot = &led_sstrenghg;
-		led-failsafe = &led_sstrenghg;
-	};
-
-	keys {
-		compatible = "gpio-keys-polled";
+	gpio-keys-polled {
+	compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <20>;
 
 		wps {
@@ -31,7 +28,7 @@
 		};
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
 		sms {
@@ -44,7 +41,7 @@
 			gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
 		};
 
-		led_sstrenghg: sstrengthg {
+		sstrengthg {
 			label = "dwr-921-c1:green:sigstrength";
 			gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
 		};
@@ -97,33 +94,28 @@
 &spi0 {
 	status = "okay";
 
-	flash@0 {
+	m25p80@0 {
+		#address-cells = <1>;
+		#size-cells = <1>;
 		compatible = "jedec,spi-nor";
 		reg = <0>;
 		spi-max-frequency = <10000000>;
 
-		partitions {
-			compatible = "fixed-partitions";
-			#address-cells = <1>;
-			#size-cells = <1>;
+		partition@0 {
+			label = "jboot";
+			reg = <0x0 0x10000>;
+			read-only;
+		};
 
-			partition@0 {
-				label = "jboot";
-				reg = <0x0 0x10000>;
-				read-only;
-			};
+		partition@10000 {
+			label = "firmware";
+			reg = <0x10000 0xfe0000>;
+		};
 
-			partition@10000 {
-				compatible = "amit,jimage";
-				label = "firmware";
-				reg = <0x10000 0xfe0000>;
-			};
-
-			config: partition@ff0000 {
-				label = "config";
-				reg = <0xff0000 0x10000>;
-				read-only;
-			};
+		config: partition@ff0000 {
+			label = "config";
+			reg = <0xff0000 0x10000>;
+			read-only;
 		};
 	};
 };

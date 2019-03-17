@@ -54,11 +54,6 @@ imx6_board_detect() {
 		name="gw5904"
 		;;
 
-	"SolidRun Cubox-i Solo/DualLite" |\
-	"SolidRun Cubox-i Dual/Quad")
-		name="cubox-i"
-		;;
-
 	"Wandboard i.MX6 Dual Lite Board")
 		name="wandboard"
 		;;

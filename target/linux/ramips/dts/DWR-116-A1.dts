@@ -9,15 +9,10 @@
 	compatible = "dlink,dwr-116-a1", "ralink,mt7620n-soc";
 	model = "D-Link DWR-116 A1/A2";
 
-	aliases {
-		led-boot = &led_status;
-		led-failsafe = &led_status;
-		led-running = &led_status;
-		led-upgrade = &led_status;
-	};
-
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <20>;
 
 		wps {
@@ -33,10 +28,10 @@
 		};
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
-		led_status: status {
+		status {
 			label = "dwr-116-a1:green:status";
 			gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
 		};
@@ -59,33 +54,28 @@
 &spi0 {
 	status = "okay";
 
-	flash@0 {
+	m25p80@0 {
+		#address-cells = <1>;
+		#size-cells = <1>;
 		compatible = "jedec,spi-nor";
 		reg = <0>;
 		spi-max-frequency = <50000000>;
 
-		partitions {
-			compatible = "fixed-partitions";
-			#address-cells = <1>;
-			#size-cells = <1>;
+		partition@0 {
+			label = "jboot";
+			reg = <0x0 0x10000>;
+			read-only;
+		};
 
-			partition@0 {
-				label = "jboot";
-				reg = <0x0 0x10000>;
-				read-only;
-			};
+		partition@10000 {
+			label = "firmware";
+			reg = <0x10000 0x7e0000>;
+		};
 
-			partition@10000 {
-				compatible = "amit,jimage";
-				label = "firmware";
-				reg = <0x10000 0x7e0000>;
-			};
-
-			config: partition@7f0000 {
-				label = "config";
-				reg = <0x7f0000 0x10000>;
-				read-only;
-			};
+		config: partition@7f0000 {
+			label = "config";
+			reg = <0x7f0000 0x10000>;
+			read-only;
 		};
 	};
 };

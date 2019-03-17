@@ -12,7 +12,6 @@
  */
 
 #include "ag71xx.h"
-#include <linux/version.h>
 
 static int ag71xx_ethtool_get_settings(struct net_device *dev,
 				       struct ethtool_cmd *cmd)
@@ -23,11 +22,7 @@ static int ag71xx_ethtool_get_settings(struct net_device *dev,
 	if (!phydev)
 		return -ENODEV;
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(4,14,0)
 	return phy_ethtool_gset(phydev, cmd);
-#else
-	return phy_ethtool_ioctl(phydev, cmd);
-#endif
 }
 
 static int ag71xx_ethtool_set_settings(struct net_device *dev,
@@ -39,11 +34,7 @@ static int ag71xx_ethtool_set_settings(struct net_device *dev,
 	if (!phydev)
 		return -ENODEV;
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(4,14,0)
 	return phy_ethtool_sset(phydev, cmd);
-#else
-	return phy_ethtool_ioctl(phydev, cmd);
-#endif
 }
 
 static void ag71xx_ethtool_get_drvinfo(struct net_device *dev,

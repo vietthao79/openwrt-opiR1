@@ -16,6 +16,7 @@ gre_generic_setup() {
 	local mtu ttl tos zone ikey okey icsum ocsum iseqno oseqno multicast
 	json_get_vars mtu ttl tos zone ikey okey icsum ocsum iseqno oseqno multicast
 
+	[ -z "$zone" ] && zone="wan"
 	[ -z "$multicast" ] && multicast=1
 
 	proto_init_update "$link" 1

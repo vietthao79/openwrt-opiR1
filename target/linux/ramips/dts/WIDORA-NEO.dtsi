@@ -6,13 +6,6 @@
 / {
 	compatible = "widora,neo", "mediatek,mt7628an-soc";
 
-	aliases {
-		led-boot = &led_wifi;
-		led-failsafe = &led_wifi;
-		led-running = &led_wifi;
-		led-upgrade = &led_wifi;
-	};
-
 	chosen {
 		bootargs = "console=ttyS0,115200";
 	};
@@ -22,18 +15,20 @@
 		reg = <0x0 0x8000000>;
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
-		led_wifi: wifi {
+		wifi {
 			label = "widora:orange:wifi";
 			gpios = <&wgpio 0 GPIO_ACTIVE_HIGH>;
 			default-state = "on";
 		};
 	};
 
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <20>;
 
 		wps {

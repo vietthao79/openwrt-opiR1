@@ -6,15 +6,10 @@
 / {
 	compatible = "7links,px-4885", "ralink,rt5350-soc";
 
-	aliases {
-		led-boot = &led_wifi;
-		led-failsafe = &led_wifi;
-		led-running = &led_wifi;
-		led-upgrade = &led_wifi;
-	};
-
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
 		poll-interval = <20>;
 
 		reset {
@@ -24,19 +19,17 @@
 		};
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
-		led_wifi: wifi {
+		orange {
 			label = "px-4885:orange:wifi";
 			gpios = <&gpio0 18 GPIO_ACTIVE_LOW>;
 		};
 
-		storage {
+		blue {
 			label = "px-4885:blue:storage";
 			gpios = <&gpio0 19 GPIO_ACTIVE_LOW>;
-			trigger-sources = <&ohci_port1>, <&ehci_port1>;
-			linux,default-trigger = "usbport";
 		};
 	};
 };

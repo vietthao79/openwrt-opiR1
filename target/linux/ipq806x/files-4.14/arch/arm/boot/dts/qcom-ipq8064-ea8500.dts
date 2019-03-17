@@ -33,7 +33,7 @@
 
 	chosen {
 		bootargs = "console=ttyMSM0,115200n8";
-		stdout-path = "serial0:115200n8";
+		linux,stdout-path = "serial0:115200n8";
 		append-rootblock = "ubi.mtd=";  /* append to bootargs adding the root deviceblock nbr from bootloader */
 	};
 
@@ -309,6 +309,7 @@
 			pinctrl-names = "default";
 
 			phy0: ethernet-phy@0 {
+				device_type = "ethernet-phy";
 				reg = <0>;
 				qca,ar8327-initvals = <
 					0x00004 0x7600000   /* PAD0_MODE */
@@ -322,6 +323,7 @@
 			};
 
 			phy4: ethernet-phy@4 {
+				device_type = "ethernet-phy";
 				reg = <4>;
 			};
 		};
@@ -361,7 +363,7 @@
 		};
 	};
 
-	keys {
+	gpio-keys {
 		compatible = "gpio-keys";
 		pinctrl-0 = <&button_pins>;
 		pinctrl-names = "default";
@@ -385,7 +387,7 @@
 		};
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 		pinctrl-0 = <&led_pins>;
 		pinctrl-names = "default";
@@ -410,3 +412,4 @@
 
 /delete-node/ &pcie2_pins;
 /delete-node/ &pcie2;
+ 

@@ -5,7 +5,7 @@
 SUBTARGET:=generic
 BOARDNAME:=Texas Instruments AR7 boards
 
-DEFAULT_PACKAGES+= kmod-mac80211 kmod-acx-mac80211 wpad-basic
+DEFAULT_PACKAGES+= kmod-mac80211 kmod-acx-mac80211 wpad-mini
 
 define Target/Description
 	Build firmware images for TI AR7 based routers.

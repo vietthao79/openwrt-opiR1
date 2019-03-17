@@ -43,7 +43,6 @@ struct data_buf {
 static FILE *signature_file, *metadata_file, *firmware_file;
 static int file_mode = MODE_DEFAULT;
 static bool truncate_file;
-static bool write_truncated;
 static bool quiet = false;
 
 static uint32_t crc_table[256];
@@ -65,7 +64,6 @@ usage(const char *progname)
 		"  -s <file>:		Extract signature file from firmware image\n"
 		"  -i <file>:		Extract metadata file from firmware image\n"
 		"  -t:			Remove extracted chunks from firmare image (using -s, -i)\n"
-		"  -T:			Output firmware image without extracted chunks to stdout (using -s, -i)\n"
 		"  -q:			Quiet (suppress error messages)\n"
 		"\n", progname);
 	return 1;
@@ -282,10 +280,8 @@ extract_data(const char *name)
 	struct fwimage_trailer tr;
 	struct data_buf dbuf = {};
 	uint32_t crc32 = ~0;
-	int data_len = 0;
 	int ret = 1;
 	void *buf;
-	bool metadata_keep = false;
 
 	firmware_file = open_file(name, false);
 	if (!firmware_file) {
@@ -305,9 +301,6 @@ extract_data(const char *name)
 	do {
 		char *tmp = dbuf.cur;
 
-		if (write_truncated && dbuf.prev)
-			fwrite(dbuf.prev, 1, BUFLEN, stdout);
-
 		dbuf.cur = dbuf.prev;
 		dbuf.prev = tmp;
 
@@ -324,6 +317,7 @@ extract_data(const char *name)
 	} while (dbuf.cur_len == BUFLEN);
 
 	while (1) {
+		int data_len;
 
 		if (extract_tail(&dbuf, &tr, sizeof(tr)))
 			break;
@@ -353,11 +347,8 @@ extract_data(const char *name)
 			ret = 0;
 			break;
 		} else if (tr.type == FWIMAGE_INFO) {
-			if (!metadata_file) {
-				dbuf.file_len += data_len + sizeof(tr);
-				metadata_keep = true;
+			if (!metadata_file)
 				break;
-			}
 
 			hdr = buf;
 			data_len -= sizeof(*hdr);
@@ -374,17 +365,6 @@ extract_data(const char *name)
 
 	if (!ret && truncate_file)
 		ftruncate(fileno(firmware_file), dbuf.file_len);
-
-	if (write_truncated) {
-		if (dbuf.prev)
-			fwrite(dbuf.prev, 1, BUFLEN, stdout);
-		if (dbuf.cur)
-			fwrite(dbuf.cur, 1, dbuf.cur_len, stdout);
-		if (metadata_keep) {
-			fwrite(buf, data_len, 1, stdout);
-			fwrite(&tr, sizeof(tr), 1, stdout);
-		}
-	}
 
 out:
 	free(buf);
@@ -410,7 +390,7 @@ int main(int argc, char **argv)
 
 	crc32_filltable(crc_table);
 
-	while ((ch = getopt(argc, argv, "i:I:qs:S:tT")) != -1) {
+	while ((ch = getopt(argc, argv, "i:I:qs:S:t")) != -1) {
 		ret = 0;
 		switch(ch) {
 		case 'S':
@@ -427,9 +407,6 @@ int main(int argc, char **argv)
 			break;
 		case 't':
 			truncate_file = true;
-			break;
-		case 'T':
-			write_truncated = true;
 			break;
 		case 'q':
 			quiet = true;

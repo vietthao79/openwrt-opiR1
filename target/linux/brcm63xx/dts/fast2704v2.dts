@@ -13,35 +13,31 @@
 		stdout-path = "serial0:115200n8";
 	};
 
-	keys {
+	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
 		#address-cells = <1>;
 		#size-cells = <0>;
 		poll-interval = <20>;
+		debounce-interval = <60>;
 
 		rfkill {
 			label = "rfkill";
 			gpios = <&pinctrl 15 1>;
 			linux,code = <KEY_WLAN>;
-			debounce-interval = <60>;
 		};
-
 		reset {
 			label = "reset";
 			gpios = <&pinctrl 23 1>;
 			linux,code = <KEY_RESTART>;
-			debounce-interval = <60>;
 		};
-
 		wps {
 			label = "wps";
 			gpios = <&pinctrl 24 1>;
 			linux,code = <KEY_WPS_BUTTON>;
-			debounce-interval = <60>;
 		};
 	};
 
-	leds {
+	gpio-leds {
 		compatible = "gpio-leds";
 
 		usb_green {
@@ -88,6 +84,8 @@
 
 		#address-cells = <1>;
 		#size-cells = <1>;
+
+		linux,part-probe = "bcm63xxpart";
 
 		partitions {
 			compatible = "fixed-partitions";
